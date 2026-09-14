@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset = "UTF-8">
+    <title> Envelope A</title>
+    </head>
+    <body>
+        <button id = "swellButton">Click Me!</button>
+    <div id = "gainArea">
+        <label for="masterSlider">Master Gain</label>
+        <input type="range" id="masterSlider" min = "-70" max = "6" value="-70">
+        <label for = "masterSlider" id="gainValue">-70.0 dBFS</label>
+        </div>
+
+    <script>
+
+        const adsrSwell = function ()
+        {
+            anOscillator.frequency.value = Math.random() * 200 + 100;
+
+            mySuperSpecialAudio.resume();
+
+            let now = mySuperSpecialAudio.currentTime;
+
+            adsr.gain.setValueAtTime(0, now);
+            adsr.gain.linearRampToValueAtTime(1, now + 1.5);
+            adar.gain.linearRampToValueAtTime(0, now + 3);
+
+    };
+
+    const mySuperSpecialAudio = new AudioContext();
+
+    const anOscillator = new OscillatorNode(mySuperSpecialAudio);
+
+    const adsr = new GainNode(mySuperSpecialAudio);
+    adsr.gain.value = 0;
+
+    const master = new GainNode(mySuperSpecialAudio);
+
+    anOscillator.connect(adsr);
+    adsr.connect(master);
+    master.connect(mySuperSpecialAudio.destination);
+
+    anOscillator.start();
+
+    const theClickButton = document.querySelector("#swellButton");
+
+    theClickButton.addEventListener("click", adsrSwell);
+    </script>
+    
+    </body>
+</html>
